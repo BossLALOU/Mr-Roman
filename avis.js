@@ -1,7 +1,6 @@
 (function () {
-  const SUPABASE_URL = "COLLE_TON_URL";
-  const SUPABASE_ANON_KEY = "COLLE_TA_CLE";
-  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPABASE_URL = "https://npymhvlxxmnatxcuibun.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5weW1odmx4eG1uYXR4Y3VpYnVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjQ3NzksImV4cCI6MjEwNTQwMDc3OX0.-BBRDGWFyvB1udeHiUNavPpWkCpWRyUadXOYGdaMP9c";  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const style = document.createElement("style");
   style.textContent = `
