@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapitres 1 à 3</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #14141a;
+    color: #f2f2f2;
+    font-family: 'Georgia', serif;
+  }
+  .retour {
+    display: block; text-align: center; color: #888;
+    padding: 16px; text-decoration: none; font-size: 0.85rem;
+  }
+  iframe { width: 100%; height: 90vh; border: none; display: block; }
+
+  .reveal-wrap { text-align: center; padding: 30px 20px; }
+  .reveal-btn {
+    background: #1e1e28;
+    border: 1px solid #333;
+    color: #f2f2f2;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-family: system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .reveal-btn:hover { background: #262632; }
+
+  .section {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 10px 20px 60px;
+    display: none;
+  }
+  .section.visible { display: block; }
+
+  .rating-block { text-align: center; margin-bottom: 40px; }
+  .rating-block h3 { font-weight: normal; margin-bottom: 6px; }
+  .stars { font-size: 2.2rem; }
+  .stars span {
+    display: inline-block;
+    color: #444;
+    cursor: pointer;
+    transition: color 0.1s;
+  }
+  .stars span.filled { color: #f5c518; }
+  .rating-info { font-size: 0.85rem; color: #999; margin-top: 8px; font-family: system-ui, sans-serif; }
+
+  .comments h3 { font-weight: normal; border-bottom: 1px solid #2a2a38; padding-bottom: 10px; }
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+    font-family: system-ui, sans-serif;
+  }
+  .comment-form input, .comment-form textarea {
+    background: #1e1e28;
+    border: 1px solid #2a2a38;
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #f2f2f2;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .comment-form textarea { resize: vertical; min-height: 70px; }
+  .comment-form button {
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  .comment-form button:hover { background: #d62839; }
+  .comment {
+    background: #1e1e28;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    font-family: system-ui, sans-serif;
+  }
+  .comment .pseudo { font-weight: bold; font-size: 0.9rem; color: #f5c518; }
+  .comment .date { font-size: 0.75rem; color: #777; margin-left: 8px; }
+  .comment .message { margin-top: 6px; font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
+  .empty { color: #777; font-size: 0.85rem; font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+
+<a class="retour" href="index.html">&larr; Retour aux chapitres</a>
+<iframe src="chapitres-1-3.pdf"></iframe>
+
+<div class="reveal-wrap" id="reveal-wrap">
+  <button class="reveal-btn" onclick="revealSection()">✔️ J'ai terminé ma lecture — noter et commenter</button>
+</div>
+
+<div class="section" id="section">
+
+  <div class="rating-block">
+    <h3>Tu as aimé ?</h3>
+    <div class="stars" id="stars">
+      <span data-value="1">★</span><span data-value="2">★</span><span data-value="3">★</span><span data-value="4">★</span><span data-value="5">★</span>
+    </div>
+    <div class="rating-info" id="rating-info">Chargement...</div>
+  </div>
+
+  <div class="comments">
+    <h3>Commentaires</h3>
+    <div class="comment-form">
+      <input type="text" id="pseudo" placeholder="Ton pseudo" maxlength="40">
+      <textarea id="message" placeholder="Ton commentaire..." maxlength="1000"></textarea>
+      <button onclick="postComment()">Envoyer</button>
+    </div>
+    <div id="comments-list"><p class="empty">Chargement des commentaires...</p></div>
+  </div>
+
+</div>
+
+<script>
+  const CHAPTER_ID = "chapitres-1-3";
+
+  const SUPABASE_URL = "https://npymhvlxxmnatxcuibun.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5weW1odmx4eG1uYXR4Y3VpYnVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjQ3NzksImV4cCI6MjEwNTQwMDc3OX0.-BBRDGWFyvB1udeHiUNavPpWkCpWRyUadXOYGdaMP9c";
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const STORAGE_KEY = "note_" + CHAPTER_ID;
+
+  let dataLoaded = false;
+
+  function revealSection() {
+    document.getElementById("reveal-wrap").style.display = "none";
+    document.getElementById("section").classList.add("visible");
+    if (!dataLoaded) {
+      dataLoaded = true;
+      loadRatingSummary();
+      loadComments();
+    }
+  }
+
+  const starSpans = document.querySelectorAll("#stars span");
+  const ratingInfo = document.getElementById("rating-info");
+
+  function paintStars(value) {
+    starSpans.forEach(function(s) {
+      s.classList.toggle("filled", parseInt(s.dataset.value) <= value);
+    });
+  }
+
+  starSpans.forEach(function(s) {
+    s.addEventListener("mouseenter", function() { paintStars(parseInt(s.dataset.value)); });
+    s.addEventListener("click", function() { rate(parseInt(s.dataset.value)); });
+  });
+  document.getElementById("stars").addEventListener("mouseleave", function() {
+    const already = localStorage.getItem(STORAGE_KEY);
+    paintStars(already ? parseInt(already) : 0);
+  });
+
+  const savedRating = localStorage.getItem(STORAGE_KEY);
+  if (savedRating) paintStars(parseInt(savedRating));
+
+  async function loadRatingSummary() {
+    const res = await sb.from("ratings").select("stars").eq("chapter_id", CHAPTER_ID);
+    const data = res.data, error = res.error;
+
+    if (error) {
+      ratingInfo.textContent = "Erreur de chargement de la note.";
+      return;
+    }
+    if (!data || data.length === 0) {
+      ratingInfo.textContent = "Sois le premier à noter !";
+      return;
+    }
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) sum += data[i].stars;
+    const avg = sum / data.length;
+    ratingInfo.textContent = avg.toFixed(1) + " / 5 — " + data.length + " vote(s)";
+  }
+
+  async function rate(value) {
+    if (localStorage.getItem(STORAGE_KEY)) {
+      ratingInfo.textContent = "Tu as déjà noté ce chapitre. Merci !";
+      return;
+    }
+    paintStars(value);
+    localStorage.setItem(STORAGE_KEY, value);
+    const res = await sb.from("ratings").insert({ chapter_id: CHAPTER_ID, stars: value });
+    if (res.error) {
+      ratingInfo.textContent = "Erreur lors de l'envoi de la note.";
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    loadRatingSummary();
+  }
+
+  const commentsList = document.getElementById("comments-list");
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  async function loadComments() {
+    const res = await sb.from("comments").select("*").eq("chapter_id", CHAPTER_ID).order("created_at", { ascending: false });
+    const data = res.data, error = res.error;
+
+    if (error) {
+      commentsList.innerHTML = '<p class="empty">Impossible de charger les commentaires.</p>';
+      return;
+    }
+    if (!data || data.length === 0) {
+      commentsList.innerHTML = '<p class="empty">Aucun commentaire pour l’instant. Sois le premier !</p>';
+      return;
+    }
+    let html = "";
+    for (let i = 0; i < data.length; i++) {
+      const c = data[i];
+      html += '<div class="comment">' +
+        '<span class="pseudo">' + escapeHtml(c.pseudo) + '</span>' +
+        '<span class="date">' + formatDate(c.created_at) + '</span>' +
+        '<div class="message">' + escapeHtml(c.message) + '</div>' +
+      '</div>';
+    }
+    commentsList.innerHTML = html;
+  }
+
+  async function postComment() {
+    const pseudoEl = document.getElementById("pseudo");
+    const messageEl = document.getElementById("message");
+    const pseudo = pseudoEl.value.trim();
+    const message = messageEl.value.trim();
+
+    if (!pseudo || !message) {
+      alert("Merci de remplir ton pseudo et ton commentaire.");
+      return;
+    }
+
+    const res = await sb.from("comments").insert({ chapter_id: CHAPTER_ID, pseudo: pseudo, message: message });
+    if (res.error) {
+      alert("Erreur lors de l'envoi, réessaie.");
+      return;
+    }
+    messageEl.value = "";
+    loadComments();
+  }
+</script>
+
+</body>
+</html>
