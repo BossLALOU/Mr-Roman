@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arknight : Legacy</title>
+<title>Livres</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -23,6 +23,7 @@
     justify-content: center;
   }
   .livre {
+    position: relative;
     width: 220px;
     background: #1e1e28;
     border-radius: 10px;
@@ -45,18 +46,33 @@
     padding: 10px;
   }
   .livre h2 { font-size: 1rem; text-align: center; padding: 14px 10px; margin: 0; font-weight: normal; }
+  .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e63946;
+    color: white;
+    font-family: system-ui, sans-serif;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
 </style>
 </head>
 <body>
-<h1>Mes livres</h1>
+<h1>Livres</h1>
 <div class="grid">
 
   <a class="livre" href="arknight-legacy/index.html">
+    <span class="badge">Nouveau</span>
     <div class="cover">Arknight : Legacy</div>
     <h2>Arknight : Legacy</h2>
   </a>
 
   <!-- Copie tout le bloc <a class="livre">...</a> pour ajouter un nouveau livre -->
+  <!-- Retire la ligne <span class="badge">Nouveau</span> quand ce n'est plus récent -->
 
 </div>
 </body>
