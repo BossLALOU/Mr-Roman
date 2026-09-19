@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arknight : Legacy</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', serif;
+    background: #14141a;
+    color: #f2f2f2;
+    margin: 0;
+    padding: 60px 20px;
+  }
+  h1 { text-align: center; margin-bottom: 10px; font-weight: normal; }
+  .retour { display: block; text-align: center; color: #888; margin-bottom: 40px; text-decoration: none; font-size: 0.85rem; }
+  .grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+  }
+  .tome {
+    width: 220px;
+    background: #1e1e28;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+  }
+  .tome:hover { transform: translateY(-4px); }
+  .tome img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+  }
+  .tome h2 { font-size: 1rem; text-align: center; padding: 14px 10px; margin: 0; font-weight: normal; }
+</style>
+</head>
+<body>
+<h1>Arknight : Legacy</h1>
+<a class="retour" href="../index.html">&larr; Retour aux livres</a>
+<div class="grid">
+
+  <a class="tome" href="tome-1/index.html">
+    <img src="couverturetome1.jpg" alt="">
+    <h2>Tome 1 — Tu as changé</h2>
+  </a>
+
+  <!-- Copie tout le bloc <a class="tome">...</a> pour ajouter un nouveau tome -->
+
+</div>
+</body>
+</html>
