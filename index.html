@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arknight : Legacy</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', serif;
+    background: #14141a;
+    color: #f2f2f2;
+    margin: 0;
+    padding: 60px 20px;
+  }
+  h1 { text-align: center; margin-bottom: 40px; font-weight: normal; letter-spacing: 1px; }
+  .grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+  }
+  .livre {
+    width: 220px;
+    background: #1e1e28;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+  }
+  .livre:hover { transform: translateY(-4px); }
+  .livre .cover {
+    width: 100%;
+    height: 300px;
+    background: #2a2a38;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+    padding: 10px;
+  }
+  .livre h2 { font-size: 1rem; text-align: center; padding: 14px 10px; margin: 0; font-weight: normal; }
+</style>
+</head>
+<body>
+<h1>Mes livres</h1>
+<div class="grid">
+
+  <a class="livre" href="arknight-legacy/index.html">
+    <div class="cover">Arknight : Legacy</div>
+    <h2>Arknight : Legacy</h2>
+  </a>
+
+  <!-- Copie tout le bloc <a class="livre">...</a> pour ajouter un nouveau livre -->
+
+</div>
+</body>
+</html>
